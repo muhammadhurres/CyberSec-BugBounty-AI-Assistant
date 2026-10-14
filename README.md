@@ -13,22 +13,22 @@
 
 ## Overview
 
-CyberSec-BugBounty-AI-Assistant is a notebook-first AI security assistant designed to help security researchers, bug bounty hunters, and engineers reason about vulnerability root causes and generate defensive remediation code. Built around a domain-adapted Qwen2.5-Coder model and a Gradio interface, it turns raw security questions into structured analysis, secure patch suggestions, and actionable code hardening guidance.
+CyberSec-BugBounty-AI-Assistant is a notebook-first AI security assistant designed to help security researchers, bug bounty hunters, and engineers reason about vulnerability root causes and genera[...]
 
-This project is intentionally built for a practical security workflow: identify the likely issue, explain the root cause in plain language, and propose a secure replacement that follows secure coding and input-validation best practices.
+This project is intentionally built for a practical security workflow: identify the likely issue, explain the root cause in plain language, and propose a secure replacement that follows secure cod[...]
 
 ---
 
 ## Why this project matters
 
-Modern security work is bottlenecked by the time required to reason through vulnerable code, map the issue to a concrete CWE/OWASP class, and rewrite the fix without introducing regressions. This project addresses that problem by combining:
+Modern security work is bottlenecked by the time required to reason through vulnerable code, map the issue to a concrete CWE/OWASP class, and rewrite the fix without introducing regressions. This [...]
 
 - a defense-oriented system persona
 - domain-specific security instruction tuning
 - a lightweight, GPU-friendly model pipeline
 - a browser-based interaction layer for fast iteration
 
-The result is a workflow that can accelerate triage, vulnerability explanation, and secure patch generation for common classes such as SQL injection, command injection, XSS, unsafe deserialization, and insecure input handling.
+The result is a workflow that can accelerate triage, vulnerability explanation, and secure patch generation for common classes such as SQL injection, command injection, XSS, unsafe deserialization[...]
 
 ---
 
@@ -49,7 +49,7 @@ Project Name: CyberSec-BugBounty-AI-Assistant (Defensive Code LLM Advisor)
 
 Domain: Applied AI Engineering / Cybersecurity (Bug Bounty Research & Vulnerability Remediation)
 
-Core function: a specialized domain-adapted LLM application engineered to perform root-cause analysis for web and system vulnerabilities (OWASP Top 10, XSS, SQLi, OS command injection, unsafe file handling) and synthesize secure, production-ready defensive code patches in Python, JavaScript, and C/C++.
+Core function: a specialized domain-adapted LLM application engineered to perform root-cause analysis for web and system vulnerabilities (OWASP Top 10, XSS, SQLi, OS command injection, unsafe file[...]
 
 ---
 
@@ -61,7 +61,7 @@ This project uses a Qwen2.5-Coder decoder-only transformer architecture and inte
 
 Root Mean Square Normalization replaces layer normalization's mean-centering step with a scale-preserving form:
 
-$$\text{RMS}(x) = \sqrt{\frac{1}{d} \sum_{i=1}^{d} x_i^2 + \epsilon}, \qquad \bar{x}_i = \frac{x_i}{\text{RMS}(x)} \cdot \gamma_i$$
+$$\text{RMS}(x) = \sqrt{\frac{1}{d} \sum_{i=1}^{d} x_i^2 + \epsilon}, \\qquad \bar{x}_i = \frac{x_i}{\text{RMS}(x)} \cdot \gamma_i$$
 
 where $d$ is the hidden dimension, $\epsilon = 10^{-6}$, and $\gamma$ is a learnable scale parameter.
 
@@ -69,7 +69,7 @@ where $d$ is the hidden dimension, $\epsilon = 10^{-6}$, and $\gamma$ is a learn
 
 RoPE encodes relative token positions by rotating query/key vectors in the complex plane:
 
-$$e^{im\theta_i} = \cos(m\theta_i) + i\sin(m\theta_i), \qquad \theta_i = 10000^{-2(i-1)/d_{\text{head}}}$$
+$$e^{im\theta_i} = \cos(m\theta_i) + i\sin(m\theta_i), \\qquad \theta_i = 10000^{-2(i-1)/d_{\text{head}}}$$
 
 This helps attention models preserve relative positional structure while being efficient at long-context reasoning.
 
@@ -79,13 +79,13 @@ Grouped Query Attention reduces memory bandwidth by sharing key/value heads acro
 
 ### 4) KV cache
 
-During autoregressive decoding, previously computed Key/Value states are cached in VRAM so the model does not recompute the full attention history for every new token. This significantly reduces inference cost and is essential for interactive sessions.
+During autoregressive decoding, previously computed Key/Value states are cached in VRAM so the model does not recompute the full attention history for every new token. This significantly reduces infer[...] 
 
 ### 5) SwiGLU feed-forward blocks
 
 The feed-forward network uses a gated SiLU activation:
 
-$$\text{FFN}(x) = \left(\text{SiLU}(xW_1) \otimes (xW_3)\right) W_2, \quad \text{SiLU}(z)=z\cdot\sigma(z)$$
+$$\text{FFN}(x) = \left(\text{SiLU}(xW_1) \otimes (xW_3)\right) W_2, \\quad \text{SiLU}(z)=z\cdot\sigma(z)$$
 
 This architecture is efficient and widely used in modern transformer systems.
 
@@ -99,7 +99,7 @@ The notebook is designed around a cybersecurity instruction-tuning dataset based
 - Approximate size: 53,201 instruction-response pairs
 - Schema: system, user, assistant
 
-The system persona is explicitly tuned to behave like a defensive security analyst. The user prompts contain security questions, harmful patterns, vulnerable code, and exploit scenarios; the assistant responses are expected to explain the underlying issue and produce a secure patch or recommendation.
+The system persona is explicitly tuned to behave like a defensive security analyst. The user prompts contain security questions, harmful patterns, vulnerable code, and exploit scenarios; the assi[...]
 
 This was a key design choice: the model is not just generating code, it is being steered toward security reasoning and remediation rather than exploitation.
 
@@ -142,6 +142,26 @@ flowchart TD
     E --> F[Gradio Interface Output]
 ```
 
+<!-- Fallback for viewers that cannot render mermaid diagrams -->
+
+If your viewer cannot render the mermaid diagram, here is the same flow in plain text:
+
+Security Dataset -> Prompt Formatting + Persona Steering -> Qwen2.5-Coder Inference -> Reasoning: Root Cause + Impact -> Defensive Patch Generation -> Gradio Interface Output
+
+Or as a simple ASCII flow:
+
+Security Dataset
+    |
+Prompt Formatting + Persona Steering
+    |
+Qwen2.5-Coder Inference
+    |
+Reasoning: Root Cause + Impact
+    |
+Defensive Patch Generation
+    |
+Gradio Interface Output
+
 ---
 
 ## Quickstart
@@ -171,7 +191,7 @@ jupyter notebook CyberSec_BugBounty_AI_Assistant.ipynb
 
 ## Responsibilities and safe use
 
-This tool is designed for defensive security workflows and secure remediation. It should be used to explain vulnerabilities, secure code, and improve defensive engineering—not to develop malicious automation or exploit chains. Any generated patch should still be reviewed by a human security professional before production deployment.
+This tool is designed for defensive security workflows and secure remediation. It should be used to explain vulnerabilities, secure code, and improve defensive engineering—not to develop malicious a[...] 
 
 ---
 
@@ -192,4 +212,4 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 ## Final takeaway
 
-CyberSec-BugBounty-AI-Assistant is a practical, notebook-based AI assistant for security reasoning and secure patch generation. It brings together modern transformer architecture, domain-specific instruction tuning, and a lightweight interactive interface to help security teams work faster without sacrificing defensive rigor.
+CyberSec-BugBounty-AI-Assistant is a practical, notebook-based AI assistant for security reasoning and secure patch generation. It brings together modern transformer architecture, domain-specific inst[...]
